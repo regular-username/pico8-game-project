@@ -1,2 +1,6 @@
 # pico8-game-project
-A small pico-8 game project for my Game Development class
+This repository contains my Pico 8 game project for the Game Development course
+# Game idea will go here
+# Goal will go here
+# Author
+Natalia Stoian

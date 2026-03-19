@@ -128,7 +128,7 @@ function move_player()
    end
 end
 
--- animaっいie walking/idle
+-- walking/idle
 function animate_player()
    p.frame = (p.frame + 1) % 20  -- counter animaっいie
 

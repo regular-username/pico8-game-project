@@ -23,6 +23,7 @@ function _draw()
    cls()
    draw_map()
    draw_player()
+   camera()  --reset camera for ui
    draw_ui()
    draw_message()
 end
@@ -207,11 +208,12 @@ x=x,
 y=y,
 
 interact=function(self)
-message="you interacted with"..self.name
+message="you interacted with "..self.name
 message_timer=90
 end,
 
 draw_ui=function(self)
+  rectfill(20,108,108,120,0)
   print("press ❎ to interact",30,110,7)
   end
   }

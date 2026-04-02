@@ -6,19 +6,28 @@ __lua__
 function _init()
    map_setup()
    make_player()
+   make_interactables()
+   
+   message=""
+   message_timer=0
   
 end
 
 function _update()
    move_player()
    animate_player() 
+   handle_interaction()
 end
 
 function _draw()
    cls()
    draw_map()
    draw_player()
+   draw_ui()
+   draw_message()
 end
+   
+
 
 
 
@@ -27,6 +36,8 @@ end
 
 function map_setup()
    wall=0
+   interactable=1
+   
    anim1=3    --tile types
    anim2=4
    lose=6
@@ -58,9 +69,8 @@ function draw_map()
 end
 
 function is_tile(tile_type, x, y)
-   tile=mget(x,y)
-   has_flag=fget(tile,tile_type)   --checks the flag
-   return has_flag
+   local tile=mget(x,y)
+   return fget(tile,tile_type)
 end
 
 function can_move(tx, ty)              --checks if you can walk on the tile  
@@ -95,13 +105,13 @@ end
 
 function make_player()
    p={}
-   p.x=3*8         -- pixeli
+   p.x=3*8         -- pixels
    p.y=5*8
    p.sprite=1
 
    p.moving=false
    p.frame=0
-   p.speed=1   -- pixeli per frame
+   p.speed=1   -- pixels per frame
    p.facing=1
    
 end
@@ -121,7 +131,8 @@ function move_player()
    p.moving=false  --reset each frame
 
    if btn(⬅️) then 
-      if can_move_pixel(p.x-p.speed, p.y) then
+      if can_move_pixel(p.x-p.speed, p.y)
+       then
          p.x-=p.speed
          p.moving=true
          p.facing=-1    --player looks left
@@ -130,7 +141,8 @@ function move_player()
       end
    end
    if btn(➡️) then 
-      if can_move_pixel(p.x+p.speed, p.y) then
+      if can_move_pixel(p.x+p.speed, p.y)
+       then
          p.x+=p.speed
          p.moving=true
          p.facing=1    --player looks right
@@ -139,7 +151,8 @@ function move_player()
       end
    end
    if btn(⬆️) then 
-      if can_move_pixel(p.x, p.y-p.speed) then
+      if can_move_pixel(p.x, p.y-p.speed)
+       then
          p.y-=p.speed
          p.moving=true
       else
@@ -147,7 +160,8 @@ function move_player()
       end
    end
    if btn(⬇️) then 
-      if can_move_pixel(p.x, p.y+p.speed) then
+      if can_move_pixel(p.x, p.y+p.speed)
+       then
          p.y+=p.speed
          p.moving=true
       else
@@ -179,6 +193,85 @@ function animate_player()
          p.sprite=2
       end
    end
+end
+
+
+-->8
+--interactable class
+
+function new_interactable(name,x,y)
+
+return{
+name=name,
+x=x,
+y=y,
+
+interact=function(self)
+message="you interacted with"..self.name
+message_timer=90
+end,
+
+draw_ui=function(self)
+  print("press ❎ to interact",30,110,7)
+  end
+  }
+  
+end
+
+--create objects
+function make_interactables()
+
+  interactables={}
+  
+  add(interactables,new_interactable("plant",10,6))
+  
+  add(interactables, new_interactable("computer",18,8))
+end
+
+--interaction system
+
+function get_near_interactable()
+
+  for obj in all(interactables) do
+  if abs(p.x/8-obj.x)<1
+  and abs(p.y/8-obj.y)<1 then
+   return obj
+  end
+end
+
+return nil
+end
+
+function handle_interaction()
+ 
+ local obj=get_near_interactable()
+ 
+ if obj and btnp(❎) then
+  obj:interact()
+ end
+ 
+ if message_timer>0 then
+ message_timer-=1
+ end
+end
+
+--ui
+
+function draw_ui()
+
+  
+  if obj then
+   print("press ❎ to interact",40,120,7)
+   end
+  
+end
+
+function draw_message()
+
+  if message_timer>0 then
+   rectfill(10,100,118,120,0)
+   print(message,15,108,7)
+  end
 end
 __gfx__
 00000000000000000022220000222200002222000022220000222200000000000000000000000000000000000000000000000000000000000000000000000000
@@ -214,7 +307,7 @@ c111c11c1cccccc1cc1cc1cc1c1cc11c666666661c1c11c1111cc1111cc1c1c10000000000000000
 cccccccc1cccccc1cccccccccc1111cc616666161c1c11c11111111111cccc110000000000000000000000000000000000000000000000000000000000000000
 c111111c1cccccc1c111111ccc1cc1c1666666661cccccc111111111111111110000000000000000000000000000000000000000000000000000000000000000
 __gff__
-0000000000000000000000000000000000000101010101010000000000000000010101000001010100000000000000000101010100010101000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000101010103030000000000000000030103000001030500000000000000000303030300030303000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 __map__
 1215151515151515151515151515151515151515151515151515151515151513383838380000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000

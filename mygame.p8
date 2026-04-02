@@ -13,7 +13,7 @@ function _init()
    
    -- interaction system
    interaction_state="idle"  -- idle / question / result
-   current_obj=nil
+   current_obj=nil      --object plyer is interacting with
    press_count=0
    press_timer=0
    moral_score=0
@@ -216,8 +216,8 @@ name=name,
 x=x,
 y=y,
 used=false, --can't use after first interaction
-question=question,
-yes_text=yes_text,
+question=question,  --text for question
+yes_text=yes_text,  --text for yes/no
 no_text=no_text,
 yes_score=yes_score,
 no_score=no_score,
@@ -271,10 +271,10 @@ function handle_interaction()
   if press_timer>0 then press_timer-=1 end
 
   -- idle
-  if interaction_state=="idle" then
+  if interaction_state=="idle" then   --start questiom if object not used
     local obj=get_near_interactable()
     if obj and not obj.used and btnp(❎) then
-      interaction_state="question"
+      interaction_state="question"  --wait first press etc
       current_obj=obj
       message=obj.question
       message_timer=999
@@ -340,7 +340,7 @@ function draw_message()
 
   if message_timer>0 then
   
-   local w = #message*4
+   local w = #message*4  --estimate message width
    local x = (128-w)/2
    
    rectfill(x-2,100,x+w+2,120,0)

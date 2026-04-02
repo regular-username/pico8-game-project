@@ -223,9 +223,9 @@ function make_interactables()
 
   interactables={}
   
-  add(interactables,new_interactable("plant",10,6))
+  add(interactables,new_interactable("plant",7,6))
   
-  add(interactables, new_interactable("computer",18,8))
+  add(interactables, new_interactable("computer",22,13))
 end
 
 --interaction system
@@ -259,9 +259,10 @@ end
 
 function draw_ui()
 
+  local obj=get_near_interactable()
   
   if obj then
-   print("press ❎ to interact",40,120,7)
+  obj:draw_ui() 
    end
   
 end

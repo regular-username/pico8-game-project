@@ -289,7 +289,7 @@ function handle_interaction()
        -- wait for first button push
        if btnp(❎) then
           press_count+=1
-          question_timer=140  -- 5 seconds for second button push
+          question_timer=100  -- 5 seconds for second button push
        end
        else
          if btnp(❎) then

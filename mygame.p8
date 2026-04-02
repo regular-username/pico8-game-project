@@ -272,8 +272,12 @@ end
 function draw_message()
 
   if message_timer>0 then
-   rectfill(10,100,118,120,0)
-   print(message,15,108,7)
+  
+   local w = #message*4
+   local x = (128-w)/2
+   
+   rectfill(x-2,100,x+w+2,120,0)
+   print(message,x,108,7)
   end
 end
 __gfx__

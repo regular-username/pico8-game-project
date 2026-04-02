@@ -10,7 +10,16 @@ function _init()
    
    message=""
    message_timer=0
-  
+   
+   -- interaction system
+   interaction_state="idle"  -- idle / question / result
+   current_obj=nil
+   press_count=0
+   press_timer=0
+   moral_score=0
+   question_timer=0
+
+   moral_score=0 
 end
 
 function _update()
@@ -200,17 +209,19 @@ end
 -->8
 --interactable class
 
-function new_interactable(name,x,y)
+function new_interactable(name,x,y,question,yes_text,no_text,yes_score,no_score)
 
 return{
 name=name,
 x=x,
 y=y,
+used=false, --can't use after first interaction
+question=question,
+yes_text=yes_text,
+no_text=no_text,
+yes_score=yes_score,
+no_score=no_score,
 
-interact=function(self)
-message="you interacted with "..self.name
-message_timer=90
-end,
 
 draw_ui=function(self)
   rectfill(20,108,108,120,0)
@@ -222,12 +233,23 @@ end
 
 --create objects
 function make_interactables()
-
   interactables={}
   
-  add(interactables,new_interactable("plant",7,6))
-  
-  add(interactables, new_interactable("computer",22,13))
+  add(interactables,new_interactable(
+    "plant",7,6,
+    "water plant? 1x=yes,2x=no",
+    "the plant is thriving!",
+    "the plant dried up...",
+    -1,1
+  ))
+
+  add(interactables,new_interactable(
+    "computer",22,13,
+    "commit fraud? 1x=no,2x=yes",
+    "you stayed honest.",
+    "consequences will follow.",
+    -1,1
+  ))
 end
 
 --interaction system
@@ -245,28 +267,73 @@ return nil
 end
 
 function handle_interaction()
- 
- local obj=get_near_interactable()
- 
- if obj and btnp(❎) then
-  obj:interact()
- end
- 
- if message_timer>0 then
- message_timer-=1
- end
+
+  if press_timer>0 then press_timer-=1 end
+
+  -- idle
+  if interaction_state=="idle" then
+    local obj=get_near_interactable()
+    if obj and not obj.used and btnp(❎) then
+      interaction_state="question"
+      current_obj=obj
+      message=obj.question
+      message_timer=999
+      press_count=0
+      press_timer=30
+    end
+
+  -- question
+  elseif interaction_state=="question" then
+
+    if press_count==0 then
+       -- wait for first button push
+       if btnp(❎) then
+          press_count+=1
+          question_timer=140  -- 5 seconds for second button push
+       end
+       else
+         if btnp(❎) then
+         press_count+=1
+         question_timer=0
+       end
+
+   question_timer-=1
+       if question_timer<=0 then
+           
+           if press_count==1 then
+              message=current_obj.yes_text
+              moral_score+=current_obj.yes_score
+           else
+              message=current_obj.no_text
+              moral_score+=current_obj.no_score
+           end
+
+           current_obj.used=true
+           message_timer=90
+           interaction_state="result"
+       end
+    end
+
+  -- result
+  elseif interaction_state=="result" then
+    if message_timer<=0 then
+      interaction_state="idle"
+      current_obj=nil
+    end
+  end
+
+  if message_timer>0 then message_timer-=1 end
 end
 
 --ui
 
 function draw_ui()
-
-  local obj=get_near_interactable()
-  
-  if obj then
-  obj:draw_ui() 
-   end
-  
+  if interaction_state=="idle" then
+    local obj=get_near_interactable()
+    if obj and not obj.used then
+      obj:draw_ui()
+    end
+  end
 end
 
 function draw_message()

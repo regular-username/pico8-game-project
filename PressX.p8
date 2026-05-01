@@ -452,7 +452,7 @@ function handle_interaction()
    question_timer-=1
        if question_timer<=0 then
            
-           local result_msg=""
+local result_msg=""
 
 
 if press_count==1 then
@@ -472,6 +472,10 @@ message_timer=90
 
 -- different message
 voice_message=nil
+if (press_count==1 
+and current_obj.yes_score <= 0)
+or (press_count>1 
+and current_obj.no_score <= 0) then
 
 if moral_score <= -5 then
    voice_message="why are you doing this?"
@@ -487,6 +491,7 @@ end
 
 if moral_score <= -8 then
    voice_message="you are hurting me."
+end
 end
               
 

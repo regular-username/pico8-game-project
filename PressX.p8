@@ -138,6 +138,10 @@ end
 function move_player()
    
 
+   -- lock movement during interaction
+   if interaction_state~="idle" then
+      return
+   end
    p.moving=false  --reset each frame
 
    if btn(⬅️) then 

@@ -294,7 +294,6 @@ function handle_interaction()
        if btnp(❎) then
           press_count+=1
           question_timer=25
-          press_count +=1
           sfx(2)
        end
        else

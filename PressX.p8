@@ -454,7 +454,7 @@ function handle_interaction()
            
            local result_msg=""
 
--- ユか🅾️な alegerea jucろ⬇️torului
+
 if press_count==1 then
    result_msg=current_obj.yes_text
    moral_score+=current_obj.yes_score
@@ -465,12 +465,12 @@ else
    sfx(2)
 end
 
--- ユかかけ mesaj de rezultat (obiect)
+
 message=result_msg
 message_timer=90
 
 
--- ユか⬆️ひ voice message separat (nu れなl suprascrie pe cel de sus)
+-- different message
 voice_message=nil
 
 if moral_score <= -5 then
@@ -520,7 +520,7 @@ end
 
 function draw_message()
 
-  -- ユかかけ message (rezultat obiect)
+  -- message 
   if message_timer>0 then
   
     local w = #message*4
@@ -530,7 +530,7 @@ function draw_message()
     print(message,x,108,7)
   end
 
-  -- ユか⬆️ひ voice message (conっ▥tiinっいろ⬇️ joc)
+  
   if voice_message then
   
     local w2 = #voice_message*4

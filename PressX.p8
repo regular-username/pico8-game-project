@@ -430,7 +430,8 @@ function handle_interaction()
       message=obj.question
       message_timer=999
       press_count=0
-      press_timer=30
+      question_timer=0
+      voice_message=nil
     end
 
   -- question
@@ -498,6 +499,8 @@ end
            current_obj.used=true
            message_timer=90
            interaction_state="result"
+           press_count=0
+           question_timer=0
        end
     end
 
@@ -526,25 +529,24 @@ end
 function draw_message()
 
   -- message 
-  if message_timer>0 then
+   if voice_message and moral_score <= -5 then
+
+    local w = #voice_message*4
+    local x = (128-w)/2
+
+    rectfill(x-2,10,x+w+2,22,0)
+    print(voice_message,x,14,8)
+
   
+  elseif message_timer>0 then
+
     local w = #message*4
     local x = (128-w)/2
-    
+
     rectfill(x-2,100,x+w+2,120,0)
     print(message,x,108,7)
-  end
 
-  
-  if voice_message then
-  
-    local w2 = #voice_message*4
-    local x2 = (128-w2)/2
-    
-    rectfill(x2-2,10,x2+w2+2,22,0)
-    print(voice_message,x2,14,8)
   end
-
 end
 __gfx__
 00000000000000000022220000222200002222000022220000222200000000000000000000000000000000000000000000000000000000000000000000000000

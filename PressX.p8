@@ -74,6 +74,10 @@ function draw_map()
    
    camera(cam_x, cam_y)
    
+   if moral_score <=-7 then
+    camera(cam_x+rnd(2)-1, cam_y+rnd(2)-1)
+   end
+   
    map(0,0,0,0,map_w,map_h)
    
 end

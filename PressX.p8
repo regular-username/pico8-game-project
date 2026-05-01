@@ -33,7 +33,7 @@ end
 
 function _draw()
 
-   if moral_score <= -8 and not glitch_active
+   if moral_score <= -6 and not glitch_active
    and not glitch_done then
       glitch_active=true
       glitch_timer=90 
@@ -110,7 +110,7 @@ function draw_map()
    
    camera(cam_x, cam_y)
    
-   if moral_score <=-7 then
+   if moral_score <=-5 then
     camera(cam_x+rnd(2)-1, cam_y+rnd(2)-1)
    end
    
@@ -184,7 +184,7 @@ function move_player()
    end
    p.moving=false  --reset each frame
 
-   local invert = (moral_score <= -6)
+   local invert = (moral_score <= -4)
 
    -- left / right
    if invert then
@@ -478,19 +478,19 @@ and current_obj.yes_score <= 0)
 or (press_count>1 
 and current_obj.no_score <= 0) then
 
-if moral_score <= -5 then
+if moral_score <= -3 then
    voice_message="why are you doing this?"
 end
 
-if moral_score <= -6 then
+if moral_score <= -4 then
    voice_message="this way i'll stop you."
 end
 
-if moral_score <= -7 then
+if moral_score <= -5 then
    voice_message="please...stop..."
 end
 
-if moral_score <= -8 then
+if moral_score <= -6 then
    voice_message="you are hurting me."
 end
 end
@@ -529,7 +529,7 @@ end
 function draw_message()
 
   -- message 
-   if voice_message and moral_score <= -5 then
+   if voice_message and moral_score <= -3 then
 
     local w = #voice_message*4
     local x = (128-w)/2

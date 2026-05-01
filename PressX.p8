@@ -370,6 +370,24 @@ function handle_interaction()
               moral_score+=current_obj.no_score
               sfx(2)
            end
+           
+              if moral_score <= -5 then
+           message="why are you doing this?"
+           end
+
+              if moral_score <= -6 then
+           message="please stop..."
+           end
+
+              if moral_score <= -7 then
+           message="you are hurting me."
+           end
+           
+           if moral_score <= -8 then
+           message="i beg you...stop"
+           end
+
+              
 
            current_obj.used=true
            message_timer=90

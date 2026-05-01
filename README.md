@@ -1,4 +1,4 @@
-# pico8-game-project
+# PressX
 This repository contains my Pico 8 game project for the Game Development course
 # Game idea
 A small narrative game where the player controls a character through simple button interactions. The character wakes up in their home and goes through everyday activities such as brushing their teeth, eating, or watering a plant. Each action is controlled by pressing a button a certain number of times. As the game progresses, the character becomes aware that they are being controlled by the player. They begin to react emotionally to the player's choices and may even ask the player to stop different actions.

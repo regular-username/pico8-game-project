@@ -144,43 +144,94 @@ function move_player()
    end
    p.moving=false  --reset each frame
 
-   if btn(⬅️) then 
-      if can_move_pixel(p.x-p.speed, p.y)
-       then
-         p.x-=p.speed
-         p.moving=true
-         p.facing=-1    --player looks left
-      else
-         sfx(0)
+   local invert = (moral_score <= -6)
+
+   -- left / right
+   if invert then
+
+      -- left becomes right
+      if btn(⬅️) then 
+         if can_move_pixel(p.x+p.speed, p.y) then
+            p.x+=p.speed
+            p.moving=true
+            p.facing=1
+         else
+            sfx(0)
+         end
       end
-   end
-   if btn(➡️) then 
-      if can_move_pixel(p.x+p.speed, p.y)
-       then
-         p.x+=p.speed
-         p.moving=true
-         p.facing=1    --player looks right
-      else
-         sfx(0)
+
+      -- right becomes left
+      if btn(➡️) then 
+         if can_move_pixel(p.x-p.speed, p.y) then
+            p.x-=p.speed
+            p.moving=true
+            p.facing=-1
+         else
+            sfx(0)
+         end
       end
-   end
-   if btn(⬆️) then 
-      if can_move_pixel(p.x, p.y-p.speed)
-       then
-         p.y-=p.speed
-         p.moving=true
-      else
-         sfx(0)
+      
+      -- up becomes down
+      if btn(⬆️) then 
+         if can_move_pixel(p.x, p.y+p.speed) then
+            p.y+=p.speed
+            p.moving=true
+         else
+            sfx(0)
+         end
       end
-   end
-   if btn(⬇️) then 
-      if can_move_pixel(p.x, p.y+p.speed)
-       then
-         p.y+=p.speed
-         p.moving=true
-      else
-         sfx(0)
+
+      -- down becomes up
+      if btn(⬇️) then 
+         if can_move_pixel(p.x, p.y-p.speed) then
+            p.y-=p.speed
+            p.moving=true
+         else
+            sfx(0)
+         end
       end
+
+   else
+
+      --  normal controls
+      if btn(⬅️) then 
+         if can_move_pixel(p.x-p.speed, p.y) then
+            p.x-=p.speed
+            p.moving=true
+            p.facing=-1
+         else
+            sfx(0)
+         end
+      end
+
+      if btn(➡️) then 
+         if can_move_pixel(p.x+p.speed, p.y) then
+            p.x+=p.speed
+            p.moving=true
+            p.facing=1
+         else
+            sfx(0)
+         end
+      end
+
+      if btn(⬆️) then 
+         if can_move_pixel(p.x, p.y-p.speed) then
+            p.y-=p.speed
+            p.moving=true
+         else
+            sfx(0)
+         end
+      end
+
+      if btn(⬇️) then 
+         if can_move_pixel(p.x, p.y+p.speed) then
+            p.y+=p.speed
+            p.moving=true
+         else
+            sfx(0)
+         end
+      end
+
    end
 end
 
@@ -376,15 +427,15 @@ function handle_interaction()
            end
 
               if moral_score <= -6 then
-           message="please stop..."
+           message="this way i'll stop you."
            end
 
               if moral_score <= -7 then
-           message="you are hurting me."
+           message="please...stop..."
            end
            
            if moral_score <= -8 then
-           message="i beg you...stop"
+           message="you are hurting me."
            end
 
               

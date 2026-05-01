@@ -452,32 +452,42 @@ function handle_interaction()
    question_timer-=1
        if question_timer<=0 then
            
-           if press_count==1 then
-              message=current_obj.yes_text
-              moral_score+=current_obj.yes_score
-              sfx(3)
-           else
-              message=current_obj.no_text
-              moral_score+=current_obj.no_score
-              sfx(2)
-           end
-           
-              if moral_score <= -5 then
-           message="why are you doing this?"
-           end
+           local result_msg=""
 
-              if moral_score <= -6 then
-           message="this way i'll stop you."
-           end
+-- ユか🅾️な alegerea jucろ⬇️torului
+if press_count==1 then
+   result_msg=current_obj.yes_text
+   moral_score+=current_obj.yes_score
+   sfx(3)
+else
+   result_msg=current_obj.no_text
+   moral_score+=current_obj.no_score
+   sfx(2)
+end
 
-              if moral_score <= -7 then
-           message="please...stop..."
-           end
-           
-           if moral_score <= -8 then
-           message="you are hurting me."
-           end
+-- ユかかけ mesaj de rezultat (obiect)
+message=result_msg
+message_timer=90
 
+
+-- ユか⬆️ひ voice message separat (nu れなl suprascrie pe cel de sus)
+voice_message=nil
+
+if moral_score <= -5 then
+   voice_message="why are you doing this?"
+end
+
+if moral_score <= -6 then
+   voice_message="this way i'll stop you."
+end
+
+if moral_score <= -7 then
+   voice_message="please...stop..."
+end
+
+if moral_score <= -8 then
+   voice_message="you are hurting me."
+end
               
 
            current_obj.used=true
@@ -510,14 +520,26 @@ end
 
 function draw_message()
 
+  -- ユかかけ message (rezultat obiect)
   if message_timer>0 then
   
-   local w = #message*4  --estimate message width
-   local x = (128-w)/2
-   
-   rectfill(x-2,100,x+w+2,120,0)
-   print(message,x,108,7)
+    local w = #message*4
+    local x = (128-w)/2
+    
+    rectfill(x-2,100,x+w+2,120,0)
+    print(message,x,108,7)
   end
+
+  -- ユか⬆️ひ voice message (conっ▥tiinっいろ⬇️ joc)
+  if voice_message then
+  
+    local w2 = #voice_message*4
+    local x2 = (128-w2)/2
+    
+    rectfill(x2-2,10,x2+w2+2,22,0)
+    print(voice_message,x2,14,8)
+  end
+
 end
 __gfx__
 00000000000000000022220000222200002222000022220000222200000000000000000000000000000000000000000000000000000000000000000000000000

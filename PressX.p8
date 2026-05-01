@@ -10,6 +10,9 @@ function _init()
    
    message=""
    message_timer=0
+   glitch_timer=0
+   glitch_active=false
+   glitch_done=false
    
    -- interaction system
    interaction_state="idle"  -- idle / question / result
@@ -29,10 +32,43 @@ function _update()
 end
 
 function _draw()
+
+   if moral_score <= -8 and not glitch_active
+   and not glitch_done then
+      glitch_active=true
+      glitch_timer=90 
+   end
+
+   -- glitch mode
+   if glitch_active then
+
+      glitch_timer-=1
+
+      -- effects
+      cls(rnd(16))
+      camera(rnd(4)-2, rnd(4)-2)
+
+      print("error...",50+rnd(3)-1,60+rnd(3)-1,7)
+      print("please stop.",30+rnd(3)-1,70+rnd(3)-1,8)
+
+      -- when glitch over
+      if glitch_timer<=0 then
+         glitch_active=false
+         glitch_done=true
+         camera(0,0)   -- reset 
+      end
+
+      return
+   end
+
+   -- normal mode
    cls()
+
+   
    draw_map()
    draw_player()
-   camera()  --reset camera for ui
+
+   camera(0,0)
    draw_ui()
    draw_message()
 end

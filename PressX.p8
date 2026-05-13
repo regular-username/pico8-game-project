@@ -20,6 +20,8 @@ function _init()
    press_count=0
    press_timer=0
    moral_score=0
+   game_state="playing"
+   ending_timer=0
    question_timer=0
 
    moral_score=0 
@@ -33,33 +35,71 @@ end
 
 function _draw()
 
-   if moral_score <= -6 and not glitch_active
-   and not glitch_done then
-      glitch_active=true
-      glitch_timer=90 
+   local used_count=0
+
+for obj in all(interactables) do
+   if obj.used then
+      used_count+=1
    end
+end
+
+if used_count==7
+and moral_score <= -6
+and not glitch_active
+and not glitch_done then
+
+   glitch_active=true
+   glitch_timer=90
+end
 
    -- glitch mode
    if glitch_active then
 
       glitch_timer-=1
 
-      -- effects
-      cls(rnd(16))
-      camera(rnd(4)-2, rnd(4)-2)
+   -- effects
+   cls(rnd(16))
+   camera(rnd(4)-2, rnd(4)-2)
 
-      print("error...",50+rnd(3)-1,60+rnd(3)-1,7)
-      print("please stop.",30+rnd(3)-1,70+rnd(3)-1,8)
+   print("error...",50+rnd(3)-1,60+rnd(3)-1,7)
+   print("please stop.",30+rnd(3)-1,70+rnd(3)-1,8)
 
-      -- when glitch over
-      if glitch_timer<=0 then
+   -- when glitch over
+   if glitch_timer<=0 then
          glitch_active=false
          glitch_done=true
-         camera(0,0)   -- reset 
+         camera(0,0)   -- reset
+          
       end
 
       return
    end
+   
+   -- good ending
+if game_state=="good_ending" then
+
+   cls(3)
+
+   print("you made kind choices.",20,50,7)
+   print("the room feels alive again.",12,70,6)
+
+   return
+end
+
+-- bad ending
+if game_state=="bad_ending" then
+
+   cls(0)
+
+   camera(rnd(3)-1,rnd(3)-1)
+
+   print("it remembers.",40,50,8)
+   print("you should have stopped.",18,70,7)
+
+   camera(0,0)
+
+   return
+end
 
    -- normal mode
    cls()
@@ -403,6 +443,17 @@ function make_interactables()
   ))
 end
 
+function all_interactions_done()
+
+ for obj in all(interactables) do
+   if not obj.used then
+      return false
+   end
+ end
+
+ return true
+end
+
 --interaction system
 
 function get_near_interactable()
@@ -419,7 +470,8 @@ end
 
 function handle_interaction()
 
-  if press_timer>0 then press_timer-=1 end
+  if press_timer>0
+  then press_timer-=1 end
 
   -- idle
   if interaction_state=="idle" then   --start questiom if object not used
@@ -496,13 +548,22 @@ end
 end
               
 
-           current_obj.used=true
-           message_timer=90
-           interaction_state="result"
-           press_count=0
-           question_timer=0
-       end
-    end
+current_obj.used=true
+if all_interactions_done() then
+
+if moral_score <= -6 then
+      game_state="bad_ending"
+   else
+      game_state="good_ending"
+   end
+
+end
+message_timer=90
+interaction_state="result"
+press_count=0
+question_timer=0
+end
+end
 
   -- result
   elseif interaction_state=="result" then

@@ -15,6 +15,7 @@ function _init()
    glitch_timer=0
    glitch_active=false
    glitch_done=false
+   restart_timer=0
    
    -- interaction system
    interaction_state="idle"  -- idle / question / result
@@ -45,16 +46,22 @@ function _update()
    handle_interaction()
    update_music_delay()
    
-   -- update particles
-   for p in all(particles) do
-      p.x += p.dx
-      p.y += p.dy
-      p.life -= 1
-
-      if p.life <= 0 then
-         del(particles,p)
+    if restart_timer>0 then
+      restart_timer-=1
+      if restart_timer==0 then
+         _init()
       end
    end
+   -- update particles
+for p in all(particles) do
+   p.x = p.x + p.dx
+   p.y = p.y + p.dy
+   p.life = p.life - 1
+
+   if p.life <= 0 then
+      del(particles,p)
+   end
+end
 end
 
 function _draw()
@@ -130,9 +137,16 @@ if game_state=="good_ending" then
 
    cls(3)
 
-   print("you made kind choices.",20,50,7)
+   print(" you made kind choices.",20,50,7)
    print("the room feels alive again.",12,70,6)
-   print("moral score: "..moral_score,28,95,7)
+   print("  moral score: "..moral_score,28,95,7)
+   if time()%1 < 0.5 then
+   print("try again? press ❎", 26,110,7)
+  end
+  
+   if btnp(❎) then
+   restart_timer=10
+end
 
    return
 end
@@ -146,9 +160,16 @@ if game_state=="bad_ending" then
 
    print("it remembers.",40,50,8)
    print("you should have stopped.",18,70,7)
-   print("moral score: "..moral_score,28,95,8)
+   print("  moral score: "..moral_score,28,95,8)
    
    camera(0,0)
+   if time()%1 < 0.5 then
+   print("try again? press ❎",26,110,7)
+  end
+
+if btnp(❎) then
+   restart_timer=10
+end
 
    return
 end

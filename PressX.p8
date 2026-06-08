@@ -25,6 +25,8 @@ function _init()
    press_timer=0
    moral_score=0
    game_state="start"
+   good_choices=0
+   bad_choices=0
    ending_timer=0
    question_timer=0
    music_delay=0
@@ -143,7 +145,7 @@ if game_state=="good_ending" then
 
    print(" you made kind choices.",20,50,7)
    print("the room feels alive again.",12,70,6)
-   print("  moral score: "..moral_score,28,95,7)
+   print("  moral score: "..moral_score.."/8",28,95,7)
    if time()%1 < 0.5 then
    print("try again? press ❎", 26,110,7)
   end
@@ -164,7 +166,7 @@ if game_state=="bad_ending" then
 
    print("it remembers.",40,50,8)
    print("you should have stopped.",18,70,7)
-   print("  moral score: "..moral_score,28,95,8)
+   print("  moral score: "..moral_score.."/8",28,95,8)
    
    camera(0,0)
    if time()%1 < 0.5 then
@@ -654,6 +656,7 @@ if press_count==1 then
    result_msg=current_obj.yes_text
    moral_score+=current_obj.yes_score
    sfx(3)
+   good_choices+=1
    
    spawn_particles(
    current_obj.x*8+4,
@@ -664,6 +667,7 @@ else
    result_msg=current_obj.no_text
    moral_score+=current_obj.no_score
    sfx(2)
+   bad_choices+=1
    
    spawn_particles(
    current_obj.x*8+4, 
@@ -706,13 +710,13 @@ end
 current_obj.used=true
 if all_interactions_done() then
 
-if moral_score <= -6 then
-      game_state="bad_ending"
-      input_lock=15
-   else
-      game_state="good_ending"
-      input_lock=15
-   end
+if bad_choices > good_choices then
+   game_state="bad_ending"
+   input_lock=15
+else
+   game_state="good_ending"
+   input_lock=15
+end
 
 end
 message_timer=90

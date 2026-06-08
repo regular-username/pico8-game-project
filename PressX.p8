@@ -52,13 +52,21 @@ function _draw()
       cls(1)
 
       print("pressx",48,40,7)
-      spr(1,60,50)
+      local title_sprite
+
+if time()%1 < 0.5 then
+   title_sprite=1
+else
+   title_sprite=2
+end
+
+spr(title_sprite,60,50)
       
       print("  explore the room",22,60,13)
-      print("  every choice matters",18,70,6)
+      print(" every choice matters",18,70,6)
       
       if time()%1 < 0.5 then
-         print("  press ❎ to start",26,90,6)
+         print(" press ❎ to start",26,90,6)
       end
 
       return

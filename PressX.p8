@@ -20,23 +20,49 @@ function _init()
    press_count=0
    press_timer=0
    moral_score=0
-   game_state="playing"
+   game_state="start"
    ending_timer=0
    question_timer=0
    music_delay=0
    current_sfx=0
-   sfx(0,0)
    moral_score=0 
 end
 
 function _update()
+      -- start screen
+   if game_state=="start" then
+      if btnp(❎) then
+         game_state="playing"
+         sfx(0,0)
+      end
+      return
+   end
+
    move_player()
-   animate_player() 
+   animate_player()
    handle_interaction()
    update_music_delay()
 end
 
 function _draw()
+
+-- start screen
+   if game_state=="start" then
+
+      cls(1)
+
+      print("pressx",48,40,7)
+      spr(1,60,50)
+      
+      print("  explore the room",22,60,13)
+      print("  every choice matters",18,70,6)
+      
+      if time()%1 < 0.5 then
+         print("  press ❎ to start",26,90,6)
+      end
+
+      return
+   end
 
    local used_count=0
 
@@ -85,6 +111,7 @@ if game_state=="good_ending" then
 
    print("you made kind choices.",20,50,7)
    print("the room feels alive again.",12,70,6)
+   print("moral score: "..moral_score,28,95,7)
 
    return
 end
@@ -98,7 +125,8 @@ if game_state=="bad_ending" then
 
    print("it remembers.",40,50,8)
    print("you should have stopped.",18,70,7)
-
+   print("moral score: "..moral_score,28,95,8)
+   
    camera(0,0)
 
    return

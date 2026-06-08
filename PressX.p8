@@ -16,6 +16,7 @@ function _init()
    glitch_active=false
    glitch_done=false
    restart_timer=0
+   input_lock=0
    
    -- interaction system
    interaction_state="idle"  -- idle / question / result
@@ -52,6 +53,9 @@ function _update()
          _init()
       end
    end
+   if input_lock>0 then
+   input_lock-=1
+end
    -- update particles
 for p in all(particles) do
    p.x = p.x + p.dx
@@ -144,7 +148,7 @@ if game_state=="good_ending" then
    print("try again? press ❎", 26,110,7)
   end
   
-   if btnp(❎) then
+   if input_lock<=0 and btnp(❎) then
    restart_timer=10
 end
 
@@ -167,7 +171,7 @@ if game_state=="bad_ending" then
    print("try again? press ❎",26,110,7)
   end
 
-if btnp(❎) then
+if input_lock<=0 and btnp(❎) then
    restart_timer=10
 end
 
@@ -704,8 +708,10 @@ if all_interactions_done() then
 
 if moral_score <= -6 then
       game_state="bad_ending"
+      input_lock=15
    else
       game_state="good_ending"
+      input_lock=15
    end
 
 end

@@ -180,6 +180,25 @@ end
    return
 end
 
+-- neutral ending
+if game_state=="neutral_ending" then
+
+   cls(5)
+
+   print("you were unsure.",30,50,7)
+   print("your choices led nowhere.",18,70,6)
+   print("  moral score: "..moral_score.."/8",28,95,7)
+
+   if time()%1 < 0.5 then
+      print("try again? press ❎",26,110,7)
+   end
+
+   if input_lock<=0 and btnp(❎) then
+      restart_timer=10
+   end
+
+   return
+end
    -- normal mode
    cls()
 
@@ -710,15 +729,20 @@ end
 current_obj.used=true
 if all_interactions_done() then
 
-if bad_choices > good_choices then
-   game_state="bad_ending"
-   input_lock=15
-else
-   game_state="good_ending"
-   input_lock=15
+   if bad_choices > good_choices then
+      game_state="bad_ending"
+      input_lock=15
+
+   elseif good_choices > bad_choices then
+      game_state="good_ending"
+      input_lock=15
+
+   else
+      game_state="neutral_ending"
+      input_lock=15
+   end
 end
 
-end
 message_timer=90
 interaction_state="result"
 press_count=0

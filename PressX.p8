@@ -8,6 +8,8 @@ function _init()
    make_player()
    make_interactables()
    
+   particles={}
+   
    message=""
    message_timer=0
    glitch_timer=0
@@ -42,6 +44,17 @@ function _update()
    animate_player()
    handle_interaction()
    update_music_delay()
+   
+   -- update particles
+   for p in all(particles) do
+      p.x += p.dx
+      p.y += p.dy
+      p.life -= 1
+
+      if p.life <= 0 then
+         del(particles,p)
+      end
+   end
 end
 
 function _draw()
@@ -146,6 +159,11 @@ end
    
    draw_map()
    draw_player()
+   
+   -- particles
+for p in all(particles) do
+   pset(p.x,p.y,p.col)
+end
 
    camera(0,0)
    draw_ui()
@@ -249,6 +267,19 @@ function draw_player()
    else
     spr(p.sprite,p.x,p.y,1,1,true,false) --flip horizontal
    
+   end
+end
+
+function spawn_particles(x,y,col)
+   for i=1,5 do
+      add(particles,{
+         x=x,
+         y=y,
+         dx=rnd(2)-1,
+         dy=rnd(2)-2,
+         life=10+rnd(10),
+         col=col
+      })
    end
 end
 
@@ -598,10 +629,22 @@ if press_count==1 then
    result_msg=current_obj.yes_text
    moral_score+=current_obj.yes_score
    sfx(3)
+   
+   spawn_particles(
+   current_obj.x*8+4,
+   current_obj.y*8+4,
+   11)
+   
 else
    result_msg=current_obj.no_text
    moral_score+=current_obj.no_score
    sfx(2)
+   
+   spawn_particles(
+   current_obj.x*8+4, 
+   current_obj.y*8+4, 
+   8)
+   
 end
 
 music_delay=60
